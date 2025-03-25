@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = {{ cookiecutter.project_slut }}
+description = {{ cookiecutter.project_description }}
+requires-python = ">3.11"
+dynamic = ["dependencies", "optional-dependencies", "version"]
+
+[tool.setuptools.dynamic]
+dependencies = {file=["requirements/requirements.txt"]}
+version = {file=[".version"]}
+
+[tool.setuptools.dynamic.optional-dependencies]
+dev={file=["requirements/requirements-dev.txt"]}
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+
+[tool.setuptools.package-data]
+pkgname = ["py.typed"]
+
+[tool.mypy]
+mypy_path = "stubs/"

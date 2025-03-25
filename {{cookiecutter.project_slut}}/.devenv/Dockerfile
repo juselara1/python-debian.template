@@ -70,6 +70,7 @@ ENV PYENV_ROOT="/home/${USER_NAME}/.pyenv"
 ENV PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${PATH}"
 RUN pyenv install {{ cookiecutter.python_version }}
 RUN pyenv global {{ cookiecutter.python_version }}
+RUN pip install uv
 
 # Dotfiles setup
 RUN chezmoi init --apply --depth=1 --branch=${DOTFILES_BRANCH} ${DOTFILES_REPO}
