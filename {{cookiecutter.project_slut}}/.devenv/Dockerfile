@@ -50,9 +50,10 @@ COPY --from=zoxide_build /root/.local/bin/zoxide /usr/local/bin/zoxide
 COPY --from=chezmoi_build /bin/chezmoi /usr/local/bin/chezmoi
 
 RUN apt update -y && apt install -y --no-install-recommends \
-	curl ca-certificates git tmux openssh-client
+	curl ca-certificates git tmux openssh-client make build-essential libssl-dev zlib1g-dev \
+	libbz2-dev libreadline-dev libsqlite3-dev wget llvm libncurses5-dev xz-utils tk-dev libxml2-dev \
+	libxmlsec1-dev libffi-dev liblzma-dev
 RUN update-ca-certificates
-
 
 # Replicate the host user.
 RUN groupadd -g ${GROUP_ID} ${USER_NAME} \
@@ -64,8 +65,11 @@ USER ${USER_NAME}
 WORKDIR /home/${USER_NAME}/project
 
 # Install pyenv
-RUN curl -fsSL https://pyenv.run | bash
+RUN git clone --depth=1 https://github.com/pyenv/pyenv.git "/home/${USER_NAME}/.pyenv"
+ENV PYENV_ROOT="/home/${USER_NAME}/.pyenv"
+ENV PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${PATH}"
 RUN pyenv install {{ cookiecutter.python_version }}
+RUN pyenv global {{ cookiecutter.python_version }}
 
 # Dotfiles setup
 RUN chezmoi init --apply --depth=1 --branch=${DOTFILES_BRANCH} ${DOTFILES_REPO}
