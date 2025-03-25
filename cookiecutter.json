@@ -3,6 +3,7 @@
 	"project_slut": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
 	"nvim_version": "v0.10.3",
 	"debian_version": "bookworm-slim",
+	"python_version": "3.12.3",
 	"env_vars": {
 		"array": []
 	}

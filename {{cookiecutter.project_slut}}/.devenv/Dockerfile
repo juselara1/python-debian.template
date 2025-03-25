@@ -53,6 +53,7 @@ RUN apt update -y && apt install -y --no-install-recommends \
 	curl ca-certificates git tmux openssh-client
 RUN update-ca-certificates
 
+
 # Replicate the host user.
 RUN groupadd -g ${GROUP_ID} ${USER_NAME} \
 	&& useradd -l -s "/bin/bash" -u ${USER_ID} -g ${USER_NAME} ${USER_NAME} \
@@ -61,6 +62,10 @@ RUN groupadd -g ${GROUP_ID} ${USER_NAME} \
 		"${USER_ID}:${GROUP_ID}" "/home/${USER_NAME}"
 USER ${USER_NAME}
 WORKDIR /home/${USER_NAME}/project
+
+# Install pyenv
+RUN curl -fsSL https://pyenv.run | bash
+RUN pyenv install {{ cookiecutter.python_version }}
 
 # Dotfiles setup
 RUN chezmoi init --apply --depth=1 --branch=${DOTFILES_BRANCH} ${DOTFILES_REPO}
